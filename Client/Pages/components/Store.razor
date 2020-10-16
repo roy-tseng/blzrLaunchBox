@@ -1,0 +1,39 @@
+@page "/store"
+@inject IJSRuntime jsRuntime
+
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="/images/food/store.png" alt="Card image cap">
+  <div class="card-body">
+    <p class="card-title">@StoreString.Title @name</p>
+    <p class="card-text">@StoreString.Address @address</p>
+    <p class="card-text">@StoreString.Introduction<br/> @introduction</p>
+    <p class="card-text">@StoreString.VisitTimes<br/> @visitTimes</p>
+    <button class="btn btn-primary" @onclick="ShowInfo">Go somewhere</button>
+  </div>
+</div>
+
+@code{
+    
+    [Parameter]
+    public int seq {get; set;} = int.MinValue;
+
+    [Parameter]
+    public string name {get; set;} = string.Empty;
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> onclick {get; set;}
+
+    private string address {get; set;} = string.Empty;
+
+    private string introduction {get; set;} = string.Empty;
+
+    private string visitTimes {get; set;} = string.Empty;
+
+    private void ShowInfo()
+    {
+         jsRuntime.InvokeVoidAsync("alert", this.seq.ToString());       
+    }
+
+    private void ChangeBackgroundColor(){
+    }
+}

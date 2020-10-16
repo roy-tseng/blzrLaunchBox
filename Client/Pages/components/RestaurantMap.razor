@@ -1,0 +1,66 @@
+@page "/restaurantmap"
+@inject IJSRuntime jsRuntime
+@using System.Threading
+@using Pages.components
+
+<button class="btn btn-primary" @onclick="PlayGame">Play</button><p/>
+
+<table>
+
+    @for(int row=0; row < width ;row++)
+    {   
+        <tr>
+          @for(int column=0; column < blocks ;column++)
+          {
+              if(row > 0 && row < width-1){
+                  if(column >0 && column < blocks-1){
+                      <td></td>
+                      continue;
+                  }
+              }
+
+              <td>@CreateStoreComponent(string.Empty)</td>
+          }
+        </tr>
+    }
+
+
+</table>
+
+
+@code
+{
+    private int storeCount {get; set; } = 16;
+
+    private int width {get; set; } = 4;
+
+    private int blocks {get; set; } = 0;
+
+    private int pointer {get; set;} = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(() =>{
+            this.blocks = this.GetSideLength();            
+            base.OnInitializedAsync();
+        });           
+    }
+    
+    private void PlayGame()
+    {
+
+    }
+
+    private int GetSideLength(){
+        return (this.storeCount / this.width) + (this.storeCount % this.width);
+    }
+
+    private RenderFragment CreateStoreComponent(string name) => builder =>
+    {
+        builder.OpenComponent(0, typeof(Store));
+        builder.AddAttribute(1, "name", name);
+        builder.AddAttribute(2, "seq",  this.pointer);
+        builder.CloseComponent();
+        this.pointer+=1;
+    };
+}
