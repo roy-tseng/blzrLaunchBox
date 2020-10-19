@@ -1,17 +1,28 @@
 @page "/store"
 @using BlazorStyled
+@using System.Threading.Tasks;
+
 @inject IJSRuntime jsRuntime
 
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="/images/food/store.png" alt="Card image cap">
-  <div class="card-body">
-    <p class="card-title">@StoreString.Title @name</p>
-    <p class="card-text">@StoreString.Address @address</p>
-    <p class="card-text">@StoreString.Introduction<br/> @introduction</p>
-    <p class="card-text">@StoreString.VisitTimes<br/> @visitTimes</p>
-    <button class="btn btn-primary" @onclick="ShowInfo">Go somewhere</button>
-  </div>
-</div>
+<div class="card" style="width: 10rem;">   
+  <div class="@cssName" @onclick="ShowInfo">
+    <img class="card-img-top" src="/images/food/store.png" alt="Card image cap">    
+        <div class="card-body">
+          <p class="card-title">@StoreString.Title @name</p>
+          <p class="card-text">@StoreString.Address @address</p>
+          <p class="card-text">@StoreString.Introduction<br/> @introduction</p>   
+        </div>      
+    </div>
+</div><p/>
+
+<Styled @bind-Classname="@cssName">
+    label: hover-example;
+    padding: 10px;
+    background-color: @colorBackground;
+    color:@colorFont;
+    font-size: 10px;
+    border-radius: 4px; 
+</Styled>
 
 @code{
     
@@ -30,10 +41,31 @@
 
     private string visitTimes {get; set;} = string.Empty;
 
-    private string targetElement {get; set;} = "example";
+    private string cssName {get; set;} 
+
+    private string colorBackground {get; set;} = "transparent";
+
+    private string colorFont {get; set;} = "black";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+          await Task.Run(() => 
+            {     
+              base.OnAfterRenderAsync(firstRender);
+            });
+        }
+    }
 
     private void ShowInfo()
     {
-         jsRuntime.InvokeVoidAsync("alert", this.seq.ToString());       
+      //jsRuntime.InvokeVoidAsync("alert", this.seq.ToString());  
+      this.ChangeColor();
+    }
+
+    private void ChangeColor(){            
+      this.colorFont =  this.colorFont=="black"? "white" : "black";
+      this.colorBackground =  this.colorBackground == "transparent"? "#b91773" : "transparent";
     }
 }
